@@ -1,36 +1,21 @@
 package com.smd.gctbits.core;
 
-import com.smd.gctbits.config.BitsConfig;
-import com.smd.gctbits.module.ModuleEntry;
-import com.smd.gctbits.module.Modules;
+import com.smd.gctbits.Tags;
+import com.smd.gctlib.api.config.GCTConfig;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import zone.rong.mixinbooter.IEarlyMixinLoader;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @SortingIndex(9999)
 public class MixinCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-    private static final Logger LOGGER = LogManager.getLogger("GCT Bits MixinCore");
-    private static final Map<String, ModuleEntry> MIXIN_CONFIG_MODULES = createMixinConfigModules();
-
-    private static Map<String, ModuleEntry> createMixinConfigModules() {
-        Map<String, ModuleEntry> mappings = new LinkedHashMap<>();
-        for (ModuleEntry entry : Modules.entries()) {
-            for (String mixinConfig : entry.getMixinConfigs()) {
-                mappings.put(mixinConfig, entry);
-            }
-        }
-        return Collections.unmodifiableMap(mappings);
-    }
+    private static final String WITHER_LOOT_MIXIN = "mixins.gctbits.feature.wither_loot.json";
+    private static final String WITHER_LOOT_MODULE = "wither_loot";
 
     @Override
     public String[] getASMTransformerClass() {
@@ -59,20 +44,12 @@ public class MixinCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public List<String> getMixinConfigs() {
-        return new ArrayList<>(MIXIN_CONFIG_MODULES.keySet());
+        return Arrays.asList(WITHER_LOOT_MIXIN);
     }
 
     @Override
     public boolean shouldMixinConfigQueue(String mixinConfig) {
-        ModuleEntry entry = MIXIN_CONFIG_MODULES.get(mixinConfig);
-        if (entry == null) {
-            return true;
-        }
-
-        boolean enabled = entry.isEnabled();
-        if (BitsConfig.isDebugLoggingEnabled()) {
-            LOGGER.info("Mixin config [{}] for module [{}] queue result={}", mixinConfig, entry.getModuleId(), enabled);
-        }
-        return enabled;
+        return !WITHER_LOOT_MIXIN.equals(mixinConfig)
+                || GCTConfig.moduleEnabled(Tags.MOD_ID, WITHER_LOOT_MODULE, true);
     }
 }

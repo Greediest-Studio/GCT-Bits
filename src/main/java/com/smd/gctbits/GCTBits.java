@@ -1,60 +1,28 @@
 package com.smd.gctbits;
 
-import com.smd.gctbits.proxy.CommonProxy;
+import com.smd.gctbits.feature.bacodifficulty.BacoDifficultyModule;
+import com.smd.gctbits.feature.fastflyblockbreaking.FastFlyBlockBreakingModule;
+import com.smd.gctbits.feature.fixlinebreaks.FixLineBreaksModule;
+import com.smd.gctbits.feature.fluidtexturestitch.FluidTextureStitchModule;
+import com.smd.gctbits.feature.witherloot.WitherLootModule;
+import com.smd.gctlib.api.module.ModularAPI;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Mod(
         modid = Tags.MOD_ID,
         name = Tags.MOD_NAME,
         version = Tags.VERSION,
-        dependencies = "required-after:mixinbooter@[10.2,);required-after:configanytime@[1.0,);"
+        dependencies = "required-after:gctlib@[1.0,);required-after:mixinbooter@[10.2,);"
 )
 public class GCTBits {
 
-    public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
-
-    @SidedProxy(
-            serverSide = "com.smd.gctbits.proxy.CommonProxy",
-            clientSide = "com.smd.gctbits.proxy.ClientProxy"
-    )
-    public static CommonProxy proxy;
-
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        proxy.preInit(event);
-    }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        proxy.init(event);
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        proxy.postInit(event);
-    }
-
-    @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event) {
-        proxy.serverStarting(event);
-    }
-
-    @Mod.EventHandler
-    public void serverStopped(FMLServerStoppedEvent event) {
-        proxy.serverStopped(event);
-    }
-
-    @Mod.EventHandler
-    public void loadComplete(FMLLoadCompleteEvent event) {
-        proxy.loadComplete(event);
+    public GCTBits() {
+        ModularAPI.register(this, r -> {
+            r.register("wither_loot", WitherLootModule.class);
+            r.register("fast_fly_block_breaking", FastFlyBlockBreakingModule.class);
+            r.register("baco_difficulty", BacoDifficultyModule.class);
+            r.register("fluid_texture_stitch", FluidTextureStitchModule.class);
+            r.register("fix_line_breaks", FixLineBreaksModule.class);
+        });
     }
 }
