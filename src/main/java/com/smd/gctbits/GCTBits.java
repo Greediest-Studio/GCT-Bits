@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
         modid = Tags.MOD_ID,
         name = Tags.MOD_NAME,
         version = Tags.VERSION,
-        dependencies = "required-after:gctlib@[1.0,);required-after:mixinbooter@[10.2,);"
+        dependencies = "required-after:gctlib;required-after:mixinbooter;"
 )
 public class GCTBits {
 
